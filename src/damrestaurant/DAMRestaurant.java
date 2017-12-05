@@ -5,6 +5,7 @@ package damrestaurant;
 
 import dao.RestaurantDAO;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import modelo.Cocinero;
@@ -38,6 +39,22 @@ public class DAMRestaurant {
                 System.out.println("Cocinero dado de alta.");
             } catch (SQLException ex) {
                 System.out.println("Error en el alta: " + ex.getMessage());
+            }
+            
+            System.out.println("Testeando listado de cocineros");
+            List<Cocinero> cocineros;
+            try {
+                cocineros = restaurantDAO.selectAllCocineros();
+                if (cocineros.isEmpty()) {
+                    System.out.println("No hay cocineros todavía");
+                } else {
+                    System.out.println("Listado de cocineros");
+                    for (Cocinero x : cocineros) {
+                        System.out.println(x);
+                    }
+                }
+            } catch (SQLException ex) {
+                System.out.println("Error al consultar: "+ex.getMessage());
             }
 
             System.out.println("Desconectando de la base de datos...");

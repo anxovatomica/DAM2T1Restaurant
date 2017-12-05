@@ -10,7 +10,7 @@ package modelo;
  * @author mfontana
  */
 public class Cocinero {
-    
+
     private String nombre;
     private String telefono;
     private String sexo;
@@ -29,7 +29,6 @@ public class Cocinero {
         this.experiencia = experiencia;
         this.especialidad = especialidad;
     }
-    
 
     public String getTelefono() {
         return telefono;
@@ -70,9 +69,6 @@ public class Cocinero {
     public void setEspecialidad(String especialidad) {
         this.especialidad = especialidad;
     }
-    
-    
-    
 
     public String getNombre() {
         return nombre;
@@ -82,6 +78,9 @@ public class Cocinero {
         this.nombre = nombre;
     }
 
-    
-    
+    @Override
+    public String toString() {
+        return "Cocinero{" + "nombre=" + nombre + ", telefono=" + telefono + ", sexo=" + sexo + ", edad=" + edad + ", experiencia=" + experiencia + ", especialidad=" + especialidad + '}';
+    }
+
 }
