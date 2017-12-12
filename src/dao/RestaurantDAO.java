@@ -4,6 +4,7 @@
  */
 package dao;
 
+import excepciones.ExcepcionRestaurante;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,6 +14,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import modelo.Cocinero;
+import modelo.Plato;
 
 /**
  *
@@ -21,7 +23,7 @@ import modelo.Cocinero;
 public class RestaurantDAO {
 
     Connection conexion;
-    
+
     public List<Cocinero> selectAllCocineros() throws SQLException {
         String query = "select * from cocinero";
         Statement st = conexion.createStatement();
@@ -41,18 +43,50 @@ public class RestaurantDAO {
         st.close();
         return cocineros;
     }
+
+    public void insertarPlato(Plato p) throws ExcepcionRestaurante, SQLException {
+        if (existeCocinero(p.getCocinero())) {
+            String insert = "insert into plato values (?, ?, ?, ?)";
+            PreparedStatement ps = conexion.prepareStatement(insert);
+            ps.setString(1, p.getNombre());
+            ps.setString(2, p.getTipo());
+            ps.setDouble(3, p.getPrecio());
+            ps.setString(4, p.getCocinero().getNombre());
+            ps.executeUpdate();
+            ps.close();
+        } else {
+            throw new ExcepcionRestaurante("No existe el cocinero del plato");
+        }
+    }
     
-    public void insertarCocinero(Cocinero c) throws SQLException {
-        String insert = "insert into cocinero values (?, ?, ?, ?, ?, ?);";
-        PreparedStatement ps = conexion.prepareStatement(insert);
-        ps.setString(1, c.getNombre());
-        ps.setString(2, c.getTelefono());
-        ps.setString(3, c.getSexo());
-        ps.setInt(4, c.getEdad());
-        ps.setInt(5, c.getExperiencia());
-        ps.setString(6, c.getEspecialidad());
-        ps.executeUpdate();
-        ps.close();
+    public void insertarCocinero(Cocinero c) throws SQLException, ExcepcionRestaurante {
+        if (existeCocinero(c)) {
+           throw new ExcepcionRestaurante("Ya existe un cocinero con ese nombre");
+        } else {
+            String insert = "insert into cocinero values (?, ?, ?, ?, ?, ?);";
+            PreparedStatement ps = conexion.prepareStatement(insert);
+            ps.setString(1, c.getNombre());
+            ps.setString(2, c.getTelefono());
+            ps.setString(3, c.getSexo());
+            ps.setInt(4, c.getEdad());
+            ps.setInt(5, c.getExperiencia());
+            ps.setString(6, c.getEspecialidad());
+            ps.executeUpdate();
+            ps.close();
+        }
+    }
+
+    private boolean existeCocinero(Cocinero c) throws SQLException {
+        String select = "select * from cocinero where nombre='" + c.getNombre() + "'";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(select);
+        boolean existe = false;
+        if (rs.next()) {
+            existe = true;
+        }
+        rs.close();
+        st.close();
+        return existe;
     }
 
     public void conectar() throws SQLException {
