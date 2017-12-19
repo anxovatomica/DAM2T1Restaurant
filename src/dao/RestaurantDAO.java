@@ -24,6 +24,7 @@ public class RestaurantDAO {
 
     Connection conexion;
 
+    // ********************* Selects ****************************
     public List<Cocinero> selectAllCocineros() throws SQLException {
         String query = "select * from cocinero";
         Statement st = conexion.createStatement();
@@ -44,36 +45,53 @@ public class RestaurantDAO {
         return cocineros;
     }
 
+    // ********************* Inserts ****************************
     public void insertarPlato(Plato p) throws ExcepcionRestaurante, SQLException {
-        if (existeCocinero(p.getCocinero())) {
-            String insert = "insert into plato values (?, ?, ?, ?)";
-            PreparedStatement ps = conexion.prepareStatement(insert);
-            ps.setString(1, p.getNombre());
-            ps.setString(2, p.getTipo());
-            ps.setDouble(3, p.getPrecio());
-            ps.setString(4, p.getCocinero().getNombre());
-            ps.executeUpdate();
-            ps.close();
-        } else {
-            throw new ExcepcionRestaurante("No existe el cocinero del plato");
+        if (existePlato(p)) {
+            throw new ExcepcionRestaurante("ERROR: Ya existe un plato con ese nombre");
         }
+        if (!existeCocinero(p.getCocinero())) {
+            throw new ExcepcionRestaurante("ERROR: No existe el cocinero del plato");
+
+        }
+        String insert = "insert into plato values (?, ?, ?, ?)";
+        PreparedStatement ps = conexion.prepareStatement(insert);
+        ps.setString(1, p.getNombre());
+        ps.setString(2, p.getTipo());
+        ps.setDouble(3, p.getPrecio());
+        ps.setString(4, p.getCocinero().getNombre());
+        ps.executeUpdate();
+        ps.close();
     }
-    
+
     public void insertarCocinero(Cocinero c) throws SQLException, ExcepcionRestaurante {
         if (existeCocinero(c)) {
-           throw new ExcepcionRestaurante("Ya existe un cocinero con ese nombre");
-        } else {
-            String insert = "insert into cocinero values (?, ?, ?, ?, ?, ?);";
-            PreparedStatement ps = conexion.prepareStatement(insert);
-            ps.setString(1, c.getNombre());
-            ps.setString(2, c.getTelefono());
-            ps.setString(3, c.getSexo());
-            ps.setInt(4, c.getEdad());
-            ps.setInt(5, c.getExperiencia());
-            ps.setString(6, c.getEspecialidad());
-            ps.executeUpdate();
-            ps.close();
+            throw new ExcepcionRestaurante("ERROR: Ya existe un cocinero con ese nombre");
         }
+        String insert = "insert into cocinero values (?, ?, ?, ?, ?, ?);";
+        PreparedStatement ps = conexion.prepareStatement(insert);
+        ps.setString(1, c.getNombre());
+        ps.setString(2, c.getTelefono());
+        ps.setString(3, c.getSexo());
+        ps.setInt(4, c.getEdad());
+        ps.setInt(5, c.getExperiencia());
+        ps.setString(6, c.getEspecialidad());
+        ps.executeUpdate();
+        ps.close();
+    }
+
+    // ********************* Funciones auxiliares ****************************
+    private boolean existePlato(Plato p) throws SQLException {
+        String select = "select * from plato where nombre='" + p.getNombre() + "'";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(select);
+        boolean existe = false;
+        if (rs.next()) {
+            existe = true;
+        }
+        rs.close();
+        st.close();
+        return existe;
     }
 
     private boolean existeCocinero(Cocinero c) throws SQLException {
@@ -89,6 +107,7 @@ public class RestaurantDAO {
         return existe;
     }
 
+    // ********************* Conectar / Desconectar ****************************
     public void conectar() throws SQLException {
         String url = "jdbc:mysql://localhost:3306/restaurant";
         String user = "root";
