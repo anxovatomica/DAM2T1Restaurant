@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import modelo.Cocinero;
 import modelo.Plato;
+import modelo.RankingCocineroTO;
 
 /**
  *
@@ -25,6 +26,21 @@ public class RestaurantDAO {
     Connection conexion;
 
     // ********************* Selects ****************************
+    // Rankig de concineros
+    public List<RankingCocineroTO> rankingCocineros() throws SQLException {
+        String query = "select cocinero, count(*) as contador from plato group by cocinero order by contador desc;";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(query);
+        List<RankingCocineroTO> ranking = new ArrayList<>();
+        while (rs.next()) {
+            RankingCocineroTO r = new RankingCocineroTO(rs.getString("cocinero"), rs.getInt("contador"));
+            ranking.add(r);
+        }
+        rs.close();
+        st.close();
+        return ranking;
+    }
+    
     public List<Cocinero> selectAllCocineros() throws SQLException {
         String query = "select * from cocinero";
         Statement st = conexion.createStatement();

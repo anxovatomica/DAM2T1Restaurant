@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import modelo.Cocinero;
 import modelo.Plato;
+import modelo.RankingCocineroTO;
 
 /**
  *
@@ -92,6 +93,13 @@ public class DAMRestaurant {
             System.out.println("************************************************************");
             System.out.println("Testeando getPlatoByNombre para Garbanzos");
             platoByNombre(restaurantDAO, "Garbanzos");
+            
+            System.out.println("************************************************************");
+            System.out.println("Testeando Ranking de cocineros");
+            List<RankingCocineroTO> ranking = restaurantDAO.rankingCocineros();
+            for (RankingCocineroTO r : ranking) {
+                System.out.println(r);
+            }
 
             System.out.println("************************************************************");
             System.out.println("Testeando borrar cocinero " + c1.getNombre());
