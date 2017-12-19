@@ -44,9 +44,9 @@ public class RestaurantDAO {
         st.close();
         return cocineros;
     }
-    
-     // Función que devuelve un cocinero a partir del nombre
-    public Cocinero getCocineroByNombre(String nombre) throws  SQLException, ExcepcionRestaurante {
+
+    // Función que devuelve un cocinero a partir del nombre
+    public Cocinero getCocineroByNombre(String nombre) throws SQLException, ExcepcionRestaurante {
         Cocinero aux = new Cocinero(nombre);
         if (!existeCocinero(aux)) {
             throw new ExcepcionRestaurante("ERROR: No existe ningún cocinero con ese nombre");
@@ -67,8 +67,7 @@ public class RestaurantDAO {
         st.close();
         return c;
     }
-    
-    
+
     // ********************* Updates ****************************
     public void modificarExperienciaCocinero(Cocinero c) throws SQLException, ExcepcionRestaurante {
         if (!existeCocinero(c)) {
@@ -81,7 +80,29 @@ public class RestaurantDAO {
         ps.executeUpdate();
         ps.close();
     }
-    
+
+    // ********************* Deletes ****************************
+    // Función que borra un cocinero
+    public void borrarCocinero(Cocinero c) throws SQLException, ExcepcionRestaurante {
+        if (!existeCocinero(c)) {
+            throw new ExcepcionRestaurante("ERROR: No existe un cocinero con ese nombre");
+        }
+        String delete = "delete from cocinero where nombre='" + c.getNombre() + "'";
+        Statement st = conexion.createStatement();
+        st.executeUpdate(delete);
+        st.close();
+    }
+
+    // Función que borra un plato
+    public void borrarPlato(Plato p) throws SQLException, ExcepcionRestaurante {
+        if (!existePlato(p)) {
+            throw new ExcepcionRestaurante("ERROR: No existe un plato con ese nombre");
+        }
+        String delete = "delete from plato where nombre='" + p.getNombre() + "'";
+        Statement st = conexion.createStatement();
+        st.executeUpdate(delete);
+        st.close();
+    }
 
     // ********************* Inserts ****************************
     public void insertarPlato(Plato p) throws ExcepcionRestaurante, SQLException {

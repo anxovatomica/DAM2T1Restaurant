@@ -47,8 +47,8 @@ public class DAMRestaurant {
             altaCocinero(restaurantDAO, c4);
 
             System.out.println("************************************************************");
-            System.out.println("Testeando insert plato: " + p2.getNombre());
-            altaPlato(restaurantDAO, p2);
+            System.out.println("Testeando insert plato: " + p1.getNombre());
+            altaPlato(restaurantDAO, p1);
             System.out.println("************************************************************");
             System.out.println("Testeando insert plato duplicado " + p1.getNombre());
             altaPlato(restaurantDAO, p1);
@@ -70,7 +70,7 @@ public class DAMRestaurant {
             System.out.println("Estableciendo experiencia en 0 años");
             c3.setExperiencia(0);
             modificarCocinero(restaurantDAO, c3);
-            
+
             System.out.println("************************************************************");
             System.out.println("Testeando listado de todos los cocineros");
             List<Cocinero> cocineros;
@@ -85,6 +85,20 @@ public class DAMRestaurant {
             }
 
             System.out.println("************************************************************");
+            System.out.println("Testeando borrar cocinero " + c1.getNombre());
+            borrarCocinero(restaurantDAO, c4);
+            System.out.println("************************************************************");
+            System.out.println("Testeando borrar cocinero que ya no existe " + c1.getNombre());
+            borrarCocinero(restaurantDAO, c4);
+
+            System.out.println("************************************************************");
+            System.out.println("Testeando borrar plato " + p1.getNombre());
+            borrarPlato(restaurantDAO, p1);
+            System.out.println("************************************************************");
+            System.out.println("Testeando borrar plato que ya no existe  " + p1.getNombre());
+            borrarPlato(restaurantDAO, p1);
+
+            System.out.println("************************************************************");
             System.out.println("Cerrando conexión con la base de datos");
             restaurantDAO.desconectar();
             System.out.println("Conexión cerrada.");
@@ -95,12 +109,30 @@ public class DAMRestaurant {
         }
     }
 
-    private static void modificarCocinero(RestaurantDAO restaurantDAO, Cocinero c4) throws SQLException {
+    private static void borrarPlato(RestaurantDAO restaurantDAO, Plato p) throws SQLException {
         try {
-            restaurantDAO.modificarExperienciaCocinero(c4);
+            restaurantDAO.borrarPlato(p);
+            System.out.println("Plato borrado de la base de datos.");
+        } catch (ExcepcionRestaurante ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private static void borrarCocinero(RestaurantDAO restaurantDAO, Cocinero c) throws SQLException {
+        try {
+            restaurantDAO.borrarCocinero(c);
+            System.out.println("Cocinero borrado de la base de datos");
+        } catch (ExcepcionRestaurante ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private static void modificarCocinero(RestaurantDAO restaurantDAO, Cocinero c) throws SQLException {
+        try {
+            restaurantDAO.modificarExperienciaCocinero(c);
             System.out.println("Experiencia modificada.");
-            System.out.println("Obteniendo datos de la BBDD del cocinero " + c4.getNombre() + " para comprobar la nueva experiencia");
-            Cocinero aux = restaurantDAO.getCocineroByNombre(c4.getNombre());
+            System.out.println("Obteniendo datos de la BBDD del cocinero " + c.getNombre() + " para comprobar la nueva experiencia");
+            Cocinero aux = restaurantDAO.getCocineroByNombre(c.getNombre());
             System.out.println("Nuevos datos");
             System.out.println(aux);
         } catch (ExcepcionRestaurante ex) {
@@ -108,18 +140,18 @@ public class DAMRestaurant {
         }
     }
 
-    private static void altaPlato(RestaurantDAO restaurantDAO, Plato p1) throws SQLException {
+    private static void altaPlato(RestaurantDAO restaurantDAO, Plato p) throws SQLException {
         try {
-            restaurantDAO.insertarPlato(p1);
+            restaurantDAO.insertarPlato(p);
             System.out.println("Plato dado de alta.");
         } catch (ExcepcionRestaurante ex) {
             System.out.println(ex.getMessage());
         }
     }
 
-    private static void altaCocinero(RestaurantDAO restaurantDAO, Cocinero c4) throws SQLException {
+    private static void altaCocinero(RestaurantDAO restaurantDAO, Cocinero c) throws SQLException {
         try {
-            restaurantDAO.insertarCocinero(c4);
+            restaurantDAO.insertarCocinero(c);
             System.out.println("Cocinero dado de alta.");
         } catch (ExcepcionRestaurante ex) {
             System.out.println(ex.getMessage());
