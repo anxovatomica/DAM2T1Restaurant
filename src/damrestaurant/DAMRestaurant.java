@@ -7,6 +7,8 @@ import dao.RestaurantDAO;
 import excepciones.ExcepcionRestaurante;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.Cocinero;
 import modelo.Plato;
 
@@ -85,6 +87,13 @@ public class DAMRestaurant {
             }
 
             System.out.println("************************************************************");
+            System.out.println("Testeando getPlatoByNombre para Lentejas");
+            platoByNombre(restaurantDAO, "Lentejas");
+            System.out.println("************************************************************");
+            System.out.println("Testeando getPlatoByNombre para Garbanzos");
+            platoByNombre(restaurantDAO, "Garbanzos");
+
+            System.out.println("************************************************************");
             System.out.println("Testeando borrar cocinero " + c1.getNombre());
             borrarCocinero(restaurantDAO, c4);
             System.out.println("************************************************************");
@@ -106,6 +115,16 @@ public class DAMRestaurant {
 
         } catch (SQLException ex) {
             System.out.println("Error SQL: " + ex.getMessage());
+        }
+    }
+
+    private static void platoByNombre(RestaurantDAO restaurantDAO, String nombre) throws SQLException {
+        Plato aux;
+        try {
+            aux = restaurantDAO.getPlatoByNombre(nombre);
+            System.out.println(aux);
+        } catch (ExcepcionRestaurante ex) {
+            System.out.println(ex.getMessage());
         }
     }
 

@@ -19,6 +19,10 @@ public class Plato {
     public Plato() {
     }
 
+    public Plato(String nombre) {
+        this.nombre = nombre;
+    }
+
     public Plato(String nombre, String tipo, double precio, Cocinero cocinero) {
         this.nombre = nombre;
         this.tipo = tipo;
@@ -58,6 +62,11 @@ public class Plato {
 
     public void setCocinero(Cocinero cocinero) {
         this.cocinero = cocinero;
+    }
+
+    @Override
+    public String toString() {
+        return "{" +  nombre + " - " + tipo + " - " + precio + " - " + cocinero + '}';
     }
     
     

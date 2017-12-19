@@ -45,6 +45,27 @@ public class RestaurantDAO {
         return cocineros;
     }
 
+    // Función que devuelve un plato a partir del nombre
+    public Plato getPlatoByNombre(String nombre) throws SQLException, ExcepcionRestaurante {
+        Plato aux = new Plato(nombre);
+        if (!existePlato(aux)) {
+            throw new ExcepcionRestaurante("ERROR: No existe ningún plato con ese nombre");
+        }
+        String select = "select * from plato where nombre='" + nombre + "'";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(select);
+        Plato p = new Plato();
+        if (rs.next()) {
+            p.setNombre(nombre);
+            p.setPrecio(rs.getDouble("precio"));
+            p.setTipo(rs.getString("tipo"));
+            p.setCocinero(getCocineroByNombre(rs.getString("cocinero")));
+        }
+        rs.close();
+        st.close();
+        return p;
+    }
+
     // Función que devuelve un cocinero a partir del nombre
     public Cocinero getCocineroByNombre(String nombre) throws SQLException, ExcepcionRestaurante {
         Cocinero aux = new Cocinero(nombre);
