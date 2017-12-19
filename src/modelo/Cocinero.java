@@ -21,6 +21,10 @@ public class Cocinero {
     public Cocinero() {
     }
 
+    public Cocinero(String nombre) {
+        this.nombre = nombre;
+    }
+
     public Cocinero(String nombre, String telefono, String sexo, int edad, int experiencia, String especialidad) {
         this.nombre = nombre;
         this.telefono = telefono;

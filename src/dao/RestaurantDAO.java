@@ -44,6 +44,44 @@ public class RestaurantDAO {
         st.close();
         return cocineros;
     }
+    
+     // Función que devuelve un cocinero a partir del nombre
+    public Cocinero getCocineroByNombre(String nombre) throws  SQLException, ExcepcionRestaurante {
+        Cocinero aux = new Cocinero(nombre);
+        if (!existeCocinero(aux)) {
+            throw new ExcepcionRestaurante("ERROR: No existe ningún cocinero con ese nombre");
+        }
+        String select = "select * from cocinero where nombre='" + nombre + "'";
+        Statement st = conexion.createStatement();
+        ResultSet rs = st.executeQuery(select);
+        Cocinero c = new Cocinero();
+        if (rs.next()) {
+            c.setNombre(rs.getString("nombre"));
+            c.setEdad(rs.getInt("edad"));
+            c.setEspecialidad(rs.getString("especialidad"));
+            c.setExperiencia(rs.getInt("experiencia"));
+            c.setSexo(rs.getString("sexo"));
+            c.setTelefono(rs.getString("telefono"));
+        }
+        rs.close();
+        st.close();
+        return c;
+    }
+    
+    
+    // ********************* Updates ****************************
+    public void modificarExperienciaCocinero(Cocinero c) throws SQLException, ExcepcionRestaurante {
+        if (!existeCocinero(c)) {
+            throw new ExcepcionRestaurante("ERROR: No existe un cocinero con ese nombre");
+        }
+        String update = "update cocinero set experiencia=? where nombre=?";
+        PreparedStatement ps = conexion.prepareStatement(update);
+        ps.setInt(1, c.getExperiencia());
+        ps.setString(2, c.getNombre());
+        ps.executeUpdate();
+        ps.close();
+    }
+    
 
     // ********************* Inserts ****************************
     public void insertarPlato(Plato p) throws ExcepcionRestaurante, SQLException {

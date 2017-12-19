@@ -29,7 +29,7 @@ public class DAMRestaurant {
         Cocinero c3 = new Cocinero("Anonimo", "888444568", "Anonimo", 40, 10, "Platos principales");
         Cocinero c4 = new Cocinero("Cocinero Auxiliar", "999999999", "Auxiliar", 10, 10, "Auxiliar");
         Plato p1 = new Plato("Macedonia", "Postre", 4.20, c1);
-        Plato p2 = new Plato("Espaguetis carbonara", "Platos principales", 6.20, c2);
+        Plato p2 = new Plato("Huevos fritos con patatas", "Platos principales", 4.75, c2);
         Plato p3 = new Plato("Ensalada de la huerta", "Entrantes", 9.90, c3);
 
         // TEST:        
@@ -47,8 +47,8 @@ public class DAMRestaurant {
             altaCocinero(restaurantDAO, c4);
 
             System.out.println("************************************************************");
-            System.out.println("Testeando insert plato: " + p1.getNombre());
-            altaPlato(restaurantDAO, p1);
+            System.out.println("Testeando insert plato: " + p2.getNombre());
+            altaPlato(restaurantDAO, p2);
             System.out.println("************************************************************");
             System.out.println("Testeando insert plato duplicado " + p1.getNombre());
             altaPlato(restaurantDAO, p1);
@@ -56,6 +56,21 @@ public class DAMRestaurant {
             System.out.println("Testeando insert plato con cocinero que no existe " + p3.getNombre());
             altaPlato(restaurantDAO, p3);
 
+            System.out.println("************************************************************");
+            System.out.println("Testeando modificar experiencia cocinero " + c4.getNombre());
+            System.out.println("Datos actuales");
+            System.out.println(c4);
+            System.out.println("Estableciendo experiencia en 20 años");
+            c4.setExperiencia(20);
+            modificarCocinero(restaurantDAO, c4);
+            System.out.println("************************************************************");
+            System.out.println("Testeando modificar experiencia de un cocinero que no existe " + c3.getNombre());
+            System.out.println("Datos actuales");
+            System.out.println(c3);
+            System.out.println("Estableciendo experiencia en 0 años");
+            c3.setExperiencia(0);
+            modificarCocinero(restaurantDAO, c3);
+            
             System.out.println("************************************************************");
             System.out.println("Testeando listado de todos los cocineros");
             List<Cocinero> cocineros;
@@ -68,7 +83,7 @@ public class DAMRestaurant {
                     System.out.println(x);
                 }
             }
-            
+
             System.out.println("************************************************************");
             System.out.println("Cerrando conexión con la base de datos");
             restaurantDAO.desconectar();
@@ -77,6 +92,19 @@ public class DAMRestaurant {
 
         } catch (SQLException ex) {
             System.out.println("Error SQL: " + ex.getMessage());
+        }
+    }
+
+    private static void modificarCocinero(RestaurantDAO restaurantDAO, Cocinero c4) throws SQLException {
+        try {
+            restaurantDAO.modificarExperienciaCocinero(c4);
+            System.out.println("Experiencia modificada.");
+            System.out.println("Obteniendo datos de la BBDD del cocinero " + c4.getNombre() + " para comprobar la nueva experiencia");
+            Cocinero aux = restaurantDAO.getCocineroByNombre(c4.getNombre());
+            System.out.println("Nuevos datos");
+            System.out.println(aux);
+        } catch (ExcepcionRestaurante ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
