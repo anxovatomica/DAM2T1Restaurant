@@ -13,6 +13,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import modelo.Cocinero;
 import modelo.Plato;
 import modelo.RankingCocineroTO;
@@ -40,7 +42,7 @@ public class RestaurantDAO {
         st.close();
         return ranking;
     }
-    
+
     public List<Cocinero> selectAllCocineros() throws SQLException {
         String query = "select * from cocinero";
         Statement st = conexion.createStatement();
@@ -106,6 +108,26 @@ public class RestaurantDAO {
     }
 
     // ********************* Updates ****************************
+    // Función que sube la experiencia de un cocinero y el precio de un plato
+    public void modificarExpCociPrecioPlato(Cocinero c, Plato p) throws SQLException, ExcepcionRestaurante {
+        Statement st = conexion.createStatement();
+        try {
+            // Desactivamos autocommit para poder hacer la transacción
+            conexion.setAutoCommit(false);
+            String updateExp = "update cocinero set experiencia=experiencia +1 where nombre='" + c.getNombre() + "'";
+            String updatePre = "update plato set precio=precio+1 where nombre='" + p.getNombre() + "'";
+            st.executeUpdate(updateExp);
+            st.executeUpdate(updatePre);
+            conexion.commit();
+        } catch (SQLException ex) {
+            conexion.rollback();
+            throw new ExcepcionRestaurante("No se ha podido actualizar los datos");
+        } finally {
+            st.close();
+            conexion.setAutoCommit(true);
+        }
+    }
+
     public void modificarExperienciaCocinero(Cocinero c) throws SQLException, ExcepcionRestaurante {
         if (!existeCocinero(c)) {
             throw new ExcepcionRestaurante("ERROR: No existe un cocinero con ese nombre");
